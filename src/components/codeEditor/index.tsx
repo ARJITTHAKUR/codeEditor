@@ -205,8 +205,8 @@ const NewTextRenderer = ({
     return index;
   };
   const handleTextClick = (e: React.MouseEvent<HTMLPreElement>) => {
-    console.log(e.currentTarge);
-    console.log(e.currentTarget.offsetParent?.getBoundingClientRect());
+    // console.log(e.currentTarge);
+    // console.log(e.currentTarget.offsetParent?.getBoundingClientRect());
     // console.log(e.currentTarget.getBoundingClientRect());
     const parent = e.currentTarget?.offsetParent?.getBoundingClientRect();
     // const self = e.currentTarget.getBoundingClientRect();
