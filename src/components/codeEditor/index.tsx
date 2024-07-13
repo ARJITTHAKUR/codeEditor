@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { CursorElementBlinker } from "./cursorElement";
+import { NewTextRenderer } from "../newTextRenderer";
 // what does a code editor has
 // lines
 // text in line
 // formatting
-const pixelMovement = 16;
+const pixelMovementX = 9.63;
+const pixelMovementY = 16;
 export const CodeEditor = () => {
   const [text, setText] = useState(`const array1 = [1, 2, 3, 4];
 
@@ -36,32 +38,36 @@ export const CodeEditor = () => {
       return;
     }
     if (e.key === "Backspace") {
-      let textVal = "";
-      textVal = text.slice(0, cursorIndex - 1) + text.slice(cursorIndex + 1);
-      setText(textVal);
-      setCursorIndex((prev) => prev - 1);
+      console.log("backspace");
+      setCursorBlinkerPosition((prev) => ({
+        x: prev.x,
+        y: prev.y,
+      }));
       return;
     }
     if (e.key === "Enter") {
       let textVal = "";
       textVal = text.slice(0, cursorIndex) + "\n" + text.slice(cursorIndex + 1);
       setText(textVal);
-      setCursorIndex((prev) => prev + 1);
+      setCursorBlinkerPosition((prev) => ({
+        x: prev.x,
+        y: prev.y + pixelMovementY,
+      }));
+      // setCursorIndex((prev) => prev + 1);
       return;
     }
     if (e.key === "ArrowLeft") {
       // setCursorIndex((prev) => prev - 1);
       setCursorBlinkerPosition((prev) => ({
-        x: prev.x - pixelMovement,
+        x: prev.x - pixelMovementX,
         y: prev.y,
       }));
 
       return;
     }
     if (e.key === "ArrowRight") {
-      // setCursorIndex((prev) => prev + 1);
       setCursorBlinkerPosition((prev) => ({
-        x: prev.x + pixelMovement,
+        x: prev.x + pixelMovementX,
         y: prev.y,
       }));
       return;
@@ -69,14 +75,14 @@ export const CodeEditor = () => {
     if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Alt") {
       if (e.key === "ArrowDown") {
         setCursorBlinkerPosition((prev) => ({
-          x: prev.x * pixelMovement,
-          y: prev.y + pixelMovement,
+          x: prev.x,
+          y: prev.y + pixelMovementY,
         }));
       }
       if (e.key === "ArrowUp") {
         setCursorBlinkerPosition((prev) => ({
           x: prev.x,
-          y: prev.y - pixelMovement,
+          y: prev.y - pixelMovementY,
         }));
       }
       return;
@@ -101,25 +107,24 @@ export const CodeEditor = () => {
     setCursorIndex(caretPosition || text.length);
   };
 
-  const handleEditorClick = (
-    data:
-      | {
-          x: number;
-          y: number;
-          width: number;
-          height: number;
-          top: number;
-          right: number;
-          bottom: number;
-          left: number;
-        }
-      | {
-          x: number;
-          y: number;
-        }
-  ) => {
+  const handleEditorClick = (data: {
+    x: number;
+    y: number;
+    row?: number;
+    col?: number;
+    pointerToChar?: number;
+  }) => {
     console.log({ data });
-    setCursorBlinkerPosition({ x: data.x, y: data.y });
+    if (textareaRef.current) {
+      setCursorBlinkerPosition({ x: data.x, y: data.y });
+      // textareaRef.current.selectionStart = data.row;
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        data.pointerToChar,
+        data.pointerToChar
+      );
+      // console.log(textareaRef.current.selectionStart);
+    }
   };
   keyboardFuncRef.current = handleInputkey;
   useEffect(() => {
@@ -130,7 +135,7 @@ export const CodeEditor = () => {
     };
     if (textareaRef.current) {
       textareaRef?.current?.focus();
-      textareaRef.current.selectionStart = 0;
+      textareaRef.current.setSelectionRange(0, 0);
     }
     textareaRef?.current?.focus();
     window.addEventListener("keyup", handle);
@@ -138,12 +143,6 @@ export const CodeEditor = () => {
       window.removeEventListener("keyup", handle);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (textareaRef.current) {
-  //     textareaRef.current.selectionStart = 0;
-  //   }
-  // }, [textareaRef.current]);
 
   return (
     <div className="border-0.5 border-black p-2 w-full">
@@ -153,7 +152,7 @@ export const CodeEditor = () => {
         <div className="relative">
           <NewTextRenderer
             text={text}
-            cursorIndex={cursorIndex}
+            // cursorIndex={cursorIndex}
             onClick={(data) => handleEditorClick(data)}
           />
           <CursorElementBlinker
@@ -167,9 +166,9 @@ export const CodeEditor = () => {
           ref={textareaRef}
           //   key={text}
           name="main-text"
-          value={text}
+          // value={text}
           onChange={(e) => setText(e.target.value)}
-          className="border border-black w-full h-auto"
+          className="border border-black w-full h-auto p-1"
           onClick={(e) => {
             // handleSelection(e);
             handleTextAreakeyboardEvent(e);
@@ -177,144 +176,12 @@ export const CodeEditor = () => {
           rows={text.split("\n").length}
           onKeyUp={(e) => handleTextAreakeyboardEvent(e)}
           onKeyDown={(e) => handleTextAreakeyboardEvent(e)}
-        ></textarea>
+        >
+          {text}
+        </textarea>
         {/* <textarea name="" id="" cols="30" rows="10"></textarea> */}
       </div>
       {/* </pre> */}
     </div>
-  );
-};
-
-const NewTextRenderer = ({
-  text,
-  cursorIndex,
-  onClick,
-}: {
-  text: string;
-  cursorIndex: number;
-  onClick: (data: any) => void;
-}) => {
-  const splitByNewLine = text.split("\n");
-  const getIndex = (lineIndex: number, textColumnIndex: number) => {
-    //  unique index == lineIndex * 10 +
-    //             textcolumnInd +
-    //             splitByNewLine[lineIndex].length + sum of previous lengths
-    let textLengthInPrevArrays = splitByNewLine.slice(0, lineIndex);
-    let index = 0;
-
-    return index;
-  };
-  const handleTextClick = (e: React.MouseEvent<HTMLPreElement>) => {
-    // console.log(e.currentTarge);
-    // console.log(e.currentTarget.offsetParent?.getBoundingClientRect());
-    // console.log(e.currentTarget.getBoundingClientRect());
-    const parent = e.currentTarget?.offsetParent?.getBoundingClientRect();
-    // const self = e.currentTarget.getBoundingClientRect();
-    // const x = self.y / self.top - parent.y / parent?.top;
-    // const y = self.x / self.left - parent.x / parent.left;
-    const x = parent.x;
-    const y = parent.y;
-    // onClick(e.currentTarget.getBoundingClientRect());
-    onClick({ x, y });
-  };
-  return (
-    <div className="border border-black flex flex-col my-4 ">
-      {splitByNewLine.map((lines, lineIndex) => (
-        <pre
-          key={lineIndex}
-          className="h-4 block"
-          onClick={(e) => handleTextClick(e)}
-        >
-          {lines.split("").map((text, textcolumnInd) => (
-            <span key={textcolumnInd} className="h-4">
-              {/* {cursorIndex === getIndex(lineIndex, textcolumnInd) ? (
-                <CursorElement />
-              ) : null} */}
-              {text}
-            </span>
-          ))}
-        </pre>
-      ))}
-    </div>
-  );
-};
-const TextRenderer = ({
-  text,
-  cursorIndex,
-}: {
-  text: string;
-  cursorIndex: number;
-}) => {
-  const [cursor, setCursor] = useState(null);
-  let jsx: any = null;
-  //   const arrOfSpan: string[] = [""];
-  let arrOfSpan = "";
-
-  arrOfSpan = text;
-  //   console.log(arrOfSpan);
-  jsx = [];
-  for (let i = 0; i < text.length; ++i) {
-    if (i === cursorIndex) {
-      jsx.push(<CursorElement />);
-    }
-    const span = (
-      <span className=" bg-slate-300" key={i} data-index-number={i}>
-        {arrOfSpan[i]}
-      </span>
-    );
-
-    jsx.push(span);
-  }
-  //   for (let newLines = 0, charCounter = 0; charCounter < text.length; ) {
-  //     const spansForCurrentLine = [];
-  //     for (
-  //       let i = charCounter;
-  //       text[i] !== "\n" || i <= text.length;
-  //       ++i, ++charCounter
-  //     ) {
-  //       const span = <span>{text[i]}</span>;
-  //       spansForCurrentLine.push(span);
-  //     }
-  //     const linePreJsx = <pre>{spansForCurrentLine}</pre>;
-  //     jsx.push(linePreJsx);
-  //     // linePreJsx[newLines].push(spansForCurrentLine);
-  //     ++newLines;
-  //   }
-  //   let newLines = 0;
-  //   let charCounter = 0;
-  //   while (charCounter < text.length) {
-  //     const spansForCurrentLine = [];
-  //     for (let i = charCounter; text[i] !== "\n"; ++i, ++charCounter) {
-  //       const span = <span>{text[i]}</span>;
-  //       spansForCurrentLine.push(span);
-  //     }
-  //     const linePreJsx = <pre>{spansForCurrentLine}</pre>;
-  //     jsx.push(linePreJsx);
-  //     // linePreJsx[newLines].push(spansForCurrentLine);
-  //     ++newLines;
-  //   }
-  if (cursorIndex == text.length) {
-    jsx.push(<CursorElement />);
-  }
-  return jsx;
-};
-
-const CursorElement = () => {
-  const [toggleDisplay, setToggleDisplay] = useState(true);
-  const timerRef = useRef();
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setToggleDisplay((prev) => !prev);
-    }, 500);
-    return () => {
-      clearInterval(timerRef.current);
-    };
-  }, []);
-  return (
-    <>
-      <span style={{ visibility: toggleDisplay ? "visible" : "hidden" }}>
-        |
-      </span>
-    </>
   );
 };

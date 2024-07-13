@@ -14,6 +14,7 @@ export const CursorElementBlinker = ({ x, y }: { x: number; y: number }) => {
   return (
     <>
       <span
+        // className="animate-ping"
         style={{
           visibility: toggleDisplay ? "visible" : "hidden",
           position: "absolute",
