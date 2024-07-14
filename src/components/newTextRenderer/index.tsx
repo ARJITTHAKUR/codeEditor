@@ -19,9 +19,6 @@ export const NewTextRenderer = ({
 
   const handleTextClick = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement;
-    // console.log(e.currentTarget);
-    // console.log(element.getBoundingClientRect(), e.target, e);
-    const parentElement = e.currentTarget.offsetParent;
     const parent = e.currentTarget?.offsetParent?.getBoundingClientRect();
     // console.log({ parentElement });
     // if (element.tagName === "PRE") {
@@ -30,7 +27,11 @@ export const NewTextRenderer = ({
     //   const rowLength = splitByNewLine[row];
     //   onclick({});
     // }
-    if (element.tagName === "SPAN")
+    if (
+      element.tagName === "SPAN" &&
+      element.dataset.rowId &&
+      element.dataset.colId
+    )
       if (parent?.x && parent?.y && e.currentTarget.dataset.rowId) {
         const x = element.getBoundingClientRect().x - 1;
         const y = parseInt(element.dataset.rowId) * 16;
