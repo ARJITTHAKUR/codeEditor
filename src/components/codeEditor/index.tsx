@@ -53,11 +53,9 @@ export const CodeEditor = () => {
         x: prev.x,
         y: prev.y + pixelMovementY,
       }));
-      // setCursorIndex((prev) => prev + 1);
       return;
     }
     if (e.key === "ArrowLeft") {
-      // setCursorIndex((prev) => prev - 1);
       setCursorBlinkerPosition((prev) => ({
         x: prev.x - pixelMovementX,
         y: prev.y,
@@ -120,8 +118,8 @@ export const CodeEditor = () => {
       // textareaRef.current.selectionStart = data.row;
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
-        data.pointerToChar,
-        data.pointerToChar
+        data?.pointerToChar || 0,
+        data?.pointerToChar || 0
       );
       // console.log(textareaRef.current.selectionStart);
     }

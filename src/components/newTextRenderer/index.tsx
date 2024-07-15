@@ -20,7 +20,6 @@ export const NewTextRenderer = ({
   const handleTextClick = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement;
     const parent = e.currentTarget?.offsetParent?.getBoundingClientRect();
-    // console.log({ parentElement });
     // if (element.tagName === "PRE") {
     //   // this means that put the cursor on the end of the line
     //   const row = parseInt(element.dataset.rowId || 0);
