@@ -115,13 +115,11 @@ export const CodeEditor = () => {
     console.log({ data });
     if (textareaRef.current) {
       setCursorBlinkerPosition({ x: data.x, y: data.y });
-      // textareaRef.current.selectionStart = data.row;
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
         data?.pointerToChar || 0,
         data?.pointerToChar || 0
       );
-      // console.log(textareaRef.current.selectionStart);
     }
   };
   keyboardFuncRef.current = handleInputkey;
