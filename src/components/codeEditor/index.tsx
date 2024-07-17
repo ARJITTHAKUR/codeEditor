@@ -28,19 +28,43 @@ export const CodeEditor = () => {
     x: 0,
     y: 0,
   });
+  const cursorBlinkerRef = useRef<HTMLDivElement>(null);
   const handleMouseClick = (e: React.MouseEvent<HTMLPreElement>) => {
     const element = e.target as HTMLSpanElement;
     const index = parseInt(element.dataset.indexNumber || `${text.length}`);
     setCursorIndex(index);
   };
   const handleInputkey = (e: KeyboardEvent) => {
+    console.log(textareaRef.current?.selectionStart);
+    // console.log(e);
+    if (e.key === "Meta") return;
     if (e.key === "Shift") {
       return;
     }
     if (e.key === "Backspace") {
-      console.log("backspace");
+      // console.log("backspace");
+      // console.log(cursorBlinkerRef.current?.getBoundingClientRect());
+      // console.log(cursorBlinkPosition);
+      if (cursorBlinkPosition.x === 0) {
+        setCursorBlinkerPosition((prev) => ({
+          x: prev.x - pixelMovementX,
+          y: prev.y - pixelMovementY,
+        }));
+        return;
+      }
+      if (
+        cursorBlinkPosition.x ===
+        cursorBlinkerRef.current?.getBoundingClientRect().width
+      ) {
+        setCursorBlinkerPosition((prev) => ({
+          x: prev.x + pixelMovementX,
+          y: prev.y + pixelMovementY,
+        }));
+
+        return;
+      }
       setCursorBlinkerPosition((prev) => ({
-        x: prev.x,
+        x: prev.x - pixelMovementX,
         y: prev.y,
       }));
       return;
@@ -98,11 +122,22 @@ export const CodeEditor = () => {
   };
 
   const handleTextAreakeyboardEvent = (
-    e: KeyboardEvent<HTMLTextAreaElement>
+    e: React.MouseEvent<HTMLTextAreaElement>
   ) => {
-    const caretPosition = textareaRef.current?.selectionStart;
+    // new way to move the cursor in 2D based on selection movement
+    const caretPosition = textareaRef.current?.selectionStart || 0;
     // console.log({ caretPosition });
-    setCursorIndex(caretPosition || text.length);
+    let x = 0;
+    let y = 0;
+    for (let i = 0; i < caretPosition; ++i) {
+      if (i <= caretPosition && text[i] === "\n") {
+        y += pixelMovementY;
+        x = 0;
+      } else {
+        x += pixelMovementX;
+      }
+    }
+    setCursorBlinkerPosition({ x, y });
   };
 
   const handleEditorClick = (data: {
@@ -134,16 +169,14 @@ export const CodeEditor = () => {
       textareaRef.current.setSelectionRange(0, 0);
     }
     textareaRef?.current?.focus();
-    window.addEventListener("keyup", handle);
+    // window.addEventListener("keyup", handle);
     return () => {
-      window.removeEventListener("keyup", handle);
+      // window.removeEventListener("keyup", handle);
     };
   }, []);
 
   return (
     <div className="border-0.5 border-black p-2 w-full">
-      {/* <pre className="" onClick={handleMouseClick}> */}
-      {/* {<TextRenderer text={text} cursorIndex={cursorIndex} />} */}
       {
         <div className="relative">
           <NewTextRenderer
@@ -152,6 +185,7 @@ export const CodeEditor = () => {
             onClick={(data) => handleEditorClick(data)}
           />
           <CursorElementBlinker
+            ref={cursorBlinkerRef}
             x={cursorBlinkPosition.x}
             y={cursorBlinkPosition.y}
           />
@@ -160,24 +194,20 @@ export const CodeEditor = () => {
       <div>
         <textarea
           ref={textareaRef}
-          //   key={text}
           name="main-text"
           // value={text}
           onChange={(e) => setText(e.target.value)}
           className="border border-black w-full h-auto p-1"
           onClick={(e) => {
-            // handleSelection(e);
             handleTextAreakeyboardEvent(e);
           }}
           rows={text.split("\n").length}
           onKeyUp={(e) => handleTextAreakeyboardEvent(e)}
-          onKeyDown={(e) => handleTextAreakeyboardEvent(e)}
+          // onKeyDown={(e) => handleTextAreakeyboardEvent(e)}
         >
           {text}
         </textarea>
-        {/* <textarea name="" id="" cols="30" rows="10"></textarea> */}
       </div>
-      {/* </pre> */}
     </div>
   );
 };

@@ -36,11 +36,19 @@ export const NewTextRenderer = ({
         const y = parseInt(element.dataset.rowId) * 16;
         const row = parseInt(element.dataset.rowId);
         const col = parseInt(element.dataset.colId);
+        console.log({ row, col });
         let chars = 0;
-        for (let i = 0; i < row; ++i) {
+        // add all the chars from the row before
+        for (let i = 0; i < row - 1; ++i) {
           chars += splitByNewLine[row].length;
         }
-        const pointerToChar = chars;
+        let newlinechars = row;
+        console.log({ newlinechars });
+        // add all the chars from the current row
+        const pointerToChar = chars + col + newlinechars;
+
+        // let caratIndex = 0;
+        // for(let i = 0; i < row;)
         console.log({ x, y, row, col, pointerToChar });
         onClick({ x, y, row, col, pointerToChar });
       }
@@ -60,6 +68,7 @@ export const NewTextRenderer = ({
               className="h-4 bg-slate-200"
               data-row-id={lineIndex}
               data-col-id={textcolumnInd}
+              // data-carat-pos={}
             >
               {text}
             </span>
