@@ -29,11 +29,11 @@ export const CodeEditor = () => {
     y: 0,
   });
   const cursorBlinkerRef = useRef<HTMLDivElement>(null);
-  const handleMouseClick = (e: React.MouseEvent<HTMLPreElement>) => {
-    const element = e.target as HTMLSpanElement;
-    const index = parseInt(element.dataset.indexNumber || `${text.length}`);
-    setCursorIndex(index);
-  };
+  // const handleMouseClick = (e: React.MouseEvent<HTMLPreElement>) => {
+  //   const element = e.target as HTMLSpanElement;
+  //   const index = parseInt(element.dataset.indexNumber || `${text.length}`);
+  //   setCursorIndex(index);
+  // };
   const handleInputkey = (e: KeyboardEvent) => {
     console.log(textareaRef.current?.selectionStart);
     // console.log(e);
@@ -121,9 +121,7 @@ export const CodeEditor = () => {
     console.groupEnd();
   };
 
-  const handleTextAreakeyboardEvent = (
-    e: React.MouseEvent<HTMLTextAreaElement>
-  ) => {
+  const handleTextAreakeyboardEvent = (e: React.KeyboardEvent) => {
     // new way to move the cursor in 2D based on selection movement
     const caretPosition = textareaRef.current?.selectionStart || 0;
     // console.log({ caretPosition });
@@ -198,9 +196,9 @@ export const CodeEditor = () => {
           // value={text}
           onChange={(e) => setText(e.target.value)}
           className="border border-black w-full h-auto p-1"
-          onClick={(e) => {
-            handleTextAreakeyboardEvent(e);
-          }}
+          // onClick={(e) => {
+          //   handleTextAreakeyboardEvent(e);
+          // }}
           rows={text.split("\n").length}
           onKeyUp={(e) => handleTextAreakeyboardEvent(e)}
           // onKeyDown={(e) => handleTextAreakeyboardEvent(e)}

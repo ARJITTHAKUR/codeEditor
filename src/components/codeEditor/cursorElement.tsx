@@ -5,7 +5,7 @@ type CursorBlinkerProps = {
   y: number;
 };
 export const CursorElementBlinker = forwardRef(
-  ({ x, y }: CursorBlinkerProps, ref) => {
+  ({ x, y }: CursorBlinkerProps, ref: React.ForwardedRef<HTMLDivElement>) => {
     const [toggleDisplay, setToggleDisplay] = useState(true);
     const timerRef = useRef<number>();
     useEffect(() => {
