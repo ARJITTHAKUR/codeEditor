@@ -53,26 +53,74 @@ export const NewTextRenderer = ({
         onClick({ x, y, row, col, pointerToChar });
       }
   };
+  const getCaratPosition = (lineIndex: number, textcolumnInd: number) => {
+    let chars = 0;
+    // add all the chars from the row before
+    for (let i = 0; i < lineIndex - 1; ++i) {
+      chars += splitByNewLine[lineIndex].length;
+    }
+    let newlinechars = lineIndex;
+    console.log({ newlinechars });
+    // add all the chars from the current row
+    return chars + textcolumnInd + newlinechars;
+  };
   return (
-    <div className="border border-black flex flex-col my-4 ">
+    <div className="border border-black flex flex-col my-4 overflow-x-scroll">
       {splitByNewLine.map((lines, lineIndex) => (
         <pre
           key={lineIndex}
-          className="h-4 w-1 block"
+          className="h-4 block"
           data-row-id={lineIndex}
           onClick={(e) => handleTextClick(e)}
         >
-          {lines.split("").map((text, textcolumnInd) => (
-            <span
-              key={textcolumnInd}
-              className="h-4 bg-slate-200"
-              data-row-id={lineIndex}
-              data-col-id={textcolumnInd}
-              // data-carat-pos={}
-            >
-              {text}
-            </span>
-          ))}
+          {lines.split(" ").map((text, textcolumnInd) => {
+            // if (text === "") {
+            //   console.log({ text });
+            // }
+            if (text === "function") {
+              return (
+                <>
+                  <span
+                    key={textcolumnInd}
+                    className="h-4  text-blue-600"
+                    data-row-id={lineIndex}
+                    data-col-id={textcolumnInd}
+                    // data-carat-pos={getCaratPosition(lineIndex, textcolumnInd)}
+                  >
+                    {text}{" "}
+                  </span>
+                </>
+              );
+            }
+            if (text === "const") {
+              return (
+                <>
+                  <span
+                    key={textcolumnInd}
+                    className="h-4  text-blue-600"
+                    data-row-id={lineIndex}
+                    data-col-id={textcolumnInd}
+                  >
+                    {text}
+                  </span>
+                  <span> </span>
+                </>
+              );
+            }
+            return (
+              <>
+                <span
+                  key={textcolumnInd}
+                  className="h-4 "
+                  data-row-id={lineIndex}
+                  data-col-id={textcolumnInd}
+                >
+                  {text}
+                </span>
+                <span> </span>
+              </>
+            );
+          })}
         </pre>
       ))}
     </div>

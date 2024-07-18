@@ -19,7 +19,11 @@ export const CodeEditor = () => {
     
     console.log(sumWithInitial);
     // Expected output: 10
-    let textLengthInPrevArrays = splitByNewLine.slice(0, lineIndex);`);
+    let textLengthInPrevArrays = splitByNewLine.slice(0, lineIndex);
+    function test(){
+      console.log("test")
+    }
+    `);
   //   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [cursorIndex, setCursorIndex] = useState(text.length);
@@ -189,22 +193,16 @@ export const CodeEditor = () => {
           />
         </div>
       }
-      <div>
+      <div className="overflow-x-scroll">
         <textarea
           ref={textareaRef}
           name="main-text"
-          // value={text}
+          value={text}
           onChange={(e) => setText(e.target.value)}
-          className="border border-black w-full h-auto p-1"
-          // onClick={(e) => {
-          //   handleTextAreakeyboardEvent(e);
-          // }}
+          className="border border-black w-full h-auto p-1 overflow-x-scroll"
           rows={text.split("\n").length}
           onKeyUp={(e) => handleTextAreakeyboardEvent(e)}
-          // onKeyDown={(e) => handleTextAreakeyboardEvent(e)}
-        >
-          {text}
-        </textarea>
+        />
       </div>
     </div>
   );
