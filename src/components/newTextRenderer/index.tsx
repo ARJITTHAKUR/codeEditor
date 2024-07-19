@@ -44,11 +44,8 @@ export const NewTextRenderer = ({
         }
         let newlinechars = row;
         console.log({ newlinechars });
-        // add all the chars from the current row
         const pointerToChar = chars + col + newlinechars;
 
-        // let caratIndex = 0;
-        // for(let i = 0; i < row;)
         console.log({ x, y, row, col, pointerToChar });
         onClick({ x, y, row, col, pointerToChar });
       }
@@ -61,7 +58,6 @@ export const NewTextRenderer = ({
     }
     let newlinechars = lineIndex;
     console.log({ newlinechars });
-    // add all the chars from the current row
     return chars + textcolumnInd + newlinechars;
   };
   return (
@@ -74,9 +70,6 @@ export const NewTextRenderer = ({
           onClick={(e) => handleTextClick(e)}
         >
           {lines.split(" ").map((text, textcolumnInd) => {
-            // if (text === "") {
-            //   console.log({ text });
-            // }
             if (text === "function") {
               return (
                 <>

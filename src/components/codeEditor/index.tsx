@@ -24,7 +24,6 @@ export const CodeEditor = () => {
       console.log("test")
     }
     `);
-  //   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [cursorIndex, setCursorIndex] = useState(text.length);
   const keyboardFuncRef = useRef<Function>();
