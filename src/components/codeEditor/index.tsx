@@ -39,15 +39,12 @@ export const CodeEditor = () => {
   // };
   const handleInputkey = (e: KeyboardEvent) => {
     console.log(textareaRef.current?.selectionStart);
-    // console.log(e);
     if (e.key === "Meta") return;
     if (e.key === "Shift") {
       return;
     }
     if (e.key === "Backspace") {
-      // console.log("backspace");
       // console.log(cursorBlinkerRef.current?.getBoundingClientRect());
-      // console.log(cursorBlinkPosition);
       if (cursorBlinkPosition.x === 0) {
         setCursorBlinkerPosition((prev) => ({
           x: prev.x - pixelMovementX,
