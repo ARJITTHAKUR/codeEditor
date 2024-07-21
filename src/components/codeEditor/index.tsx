@@ -32,11 +32,7 @@ export const CodeEditor = () => {
     y: 0,
   });
   const cursorBlinkerRef = useRef<HTMLDivElement>(null);
-  // const handleMouseClick = (e: React.MouseEvent<HTMLPreElement>) => {
-  //   const element = e.target as HTMLSpanElement;
-  //   const index = parseInt(element.dataset.indexNumber || `${text.length}`);
-  //   setCursorIndex(index);
-  // };
+
   const handleInputkey = (e: KeyboardEvent) => {
     console.log(textareaRef.current?.selectionStart);
     if (e.key === "Meta") return;
