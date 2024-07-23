@@ -40,7 +40,6 @@ export const CodeEditor = () => {
       return;
     }
     if (e.key === "Backspace") {
-      // console.log(cursorBlinkerRef.current?.getBoundingClientRect());
       if (cursorBlinkPosition.x === 0) {
         setCursorBlinkerPosition((prev) => ({
           x: prev.x - pixelMovementX,
