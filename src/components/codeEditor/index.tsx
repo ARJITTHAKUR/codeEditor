@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { CursorElementBlinker } from "./cursorElement";
 import { NewTextRenderer } from "../newTextRenderer";
-// what does a code editor has
-// lines
-// text in line
-// formatting
+
 const pixelMovementX = 9.63;
 const pixelMovementY = 16;
 export const CodeEditor = () => {
@@ -140,7 +137,6 @@ export const CodeEditor = () => {
     col?: number;
     pointerToChar?: number;
   }) => {
-    console.log({ data });
     if (textareaRef.current) {
       setCursorBlinkerPosition({ x: data.x, y: data.y });
       textareaRef.current.focus();
