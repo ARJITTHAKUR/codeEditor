@@ -148,11 +148,11 @@ export const CodeEditor = () => {
   };
   keyboardFuncRef.current = handleInputkey;
   useEffect(() => {
-    const handle = (e: KeyboardEvent) => {
-      if (keyboardFuncRef.current) {
-        keyboardFuncRef.current(e);
-      }
-    };
+    // const handle = (e: KeyboardEvent) => {
+    //   if (keyboardFuncRef.current) {
+    //     keyboardFuncRef.current(e);
+    //   }
+    // };
     if (textareaRef.current) {
       textareaRef?.current?.focus();
       textareaRef.current.setSelectionRange(0, 0);
