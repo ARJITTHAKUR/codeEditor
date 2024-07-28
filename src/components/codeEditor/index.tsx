@@ -170,7 +170,6 @@ export const CodeEditor = () => {
         <div className="relative">
           <NewTextRenderer
             text={text}
-            // cursorIndex={cursorIndex}
             onClick={(data) => handleEditorClick(data)}
           />
           <CursorElementBlinker
