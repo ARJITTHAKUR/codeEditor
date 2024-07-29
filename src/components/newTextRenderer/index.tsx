@@ -8,11 +8,9 @@ type ClickData = {
 
 export const NewTextRenderer = ({
   text,
-  cursorIndex,
   onClick,
 }: {
   text: string;
-  cursorIndex?: number;
   onClick: (data: ClickData) => void;
 }) => {
   const splitByNewLine = text.split("\n");
