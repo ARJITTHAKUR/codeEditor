@@ -22,7 +22,6 @@ export const NewTextRenderer = ({
     //   // this means that put the cursor on the end of the line
     //   const row = parseInt(element.dataset.rowId || 0);
     //   const rowLength = splitByNewLine[row];
-    //   onclick({});
     // }
     if (
       element.tagName === "SPAN" &&
